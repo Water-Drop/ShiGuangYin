@@ -9,4 +9,8 @@ public interface UserDao {
     public Integer addUser(User user);
     public Integer deleteUser(Integer id);
     public Integer modifyUser(User user);
+    public Integer getUserIdByTelephone(String telephone);
+    public Integer getUserIdByEmail(String email);
+    public Integer getUserIdByTelephoneAndPassword(String telephone, String password);
+    public Integer getUserIdByEmailAndPassword(String email, String password);
 }

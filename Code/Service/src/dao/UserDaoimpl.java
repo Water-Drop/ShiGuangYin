@@ -20,7 +20,7 @@ public class UserDaoimpl implements UserDao{
 		List<User> users = new ArrayList<User>();
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT email,telephone,password,type FROM model_user WHERE status!=2");
+			ps = conn.prepareStatement("SELECT email,telephone,password,type FROM tb_user WHERE status!=2");
 			rs = ps.executeQuery();
 			while (rs.next()){
 				User user = new User();
@@ -44,7 +44,7 @@ public class UserDaoimpl implements UserDao{
     	User user = new User();
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT email,telephone,password,type FROM model_user WHERE id=? AND status!=2");
+			ps = conn.prepareStatement("SELECT email,telephone,password,type FROM tb_user WHERE id=? AND status!=2");
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
 			if (rs.first() != false){
@@ -71,7 +71,7 @@ public class UserDaoimpl implements UserDao{
 		try {
 			conn = jh.getConnection();
 			conn.setAutoCommit(false);
-			ips = conn.prepareStatement("INSERT INTO model_user (email,telephone,password,type,status) VALUES (?,?,?,?,0)");
+			ips = conn.prepareStatement("INSERT INTO tb_user (email,telephone,password,type,status) VALUES (?,?,?,?,0)");
 			ips.setString(1,user.getEmail());
 			ips.setString(2,user.getTelephone());
 			ips.setString(3,user.getPassword());
@@ -105,7 +105,7 @@ public class UserDaoimpl implements UserDao{
 		Integer rtn = -1;
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("UPDATE model_user SET status=2 WHERE id=?");
+			ps = conn.prepareStatement("UPDATE tb_user SET status=2 WHERE id=?");
 			ps.setInt(1, id);
 			Integer num = ps.executeUpdate();
 			if (num == 0){
@@ -126,7 +126,7 @@ public class UserDaoimpl implements UserDao{
 		Integer rtn = -1;
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("UPDATE model_user SET email,telephone,password,type WHERE id=?");
+			ps = conn.prepareStatement("UPDATE tb_user SET email,telephone,password,type WHERE id=?");
 			
 			ps.setString(1,user.getEmail());
 			ps.setString(2,user.getTelephone());
@@ -146,5 +146,87 @@ public class UserDaoimpl implements UserDao{
 			jh.close(conn);
 		}
 		return rtn;
+    }
+    public Integer getUserIdByTelephone(String telephone){
+    	Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+    	Integer userId = -1;
+		try {
+			conn = jh.getConnection();
+			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE telephone=? AND status!=2");
+			ps.setString(1, telephone);
+			rs = ps.executeQuery();
+			if (rs.first() != false){
+				userId = rs.getInt("id");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jh.close(conn);
+		}
+		return userId;
+    }
+    public Integer getUserIdByEmail(String email){
+    	Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+    	Integer userId = -1;
+		try {
+			conn = jh.getConnection();
+			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE email=? AND status!=2");
+			ps.setString(1, email);
+			rs = ps.executeQuery();
+			if (rs.first() != false){
+				userId = rs.getInt("id");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jh.close(conn);
+		}
+		return userId;
+    }
+    public Integer getUserIdByTelephoneAndPassword(String telephone, String password){
+    	Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+    	Integer userId = -1;
+		try {
+			conn = jh.getConnection();
+			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE telephone=? AND password=? AND status!=2");
+			ps.setString(1, telephone);
+			ps.setString(2, password);
+			rs = ps.executeQuery();
+			if (rs.first() != false){
+				userId = rs.getInt("id");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jh.close(conn);
+		}
+		return userId;
+    }
+    public Integer getUserIdByEmailAndPassword(String email, String password){
+    	Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+    	Integer userId = -1;
+		try {
+			conn = jh.getConnection();
+			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE email=? AND password=? AND status!=2");
+			ps.setString(1, email);
+			ps.setString(2, password);
+			rs = ps.executeQuery();
+			if (rs.first() != false){
+				userId = rs.getInt("id");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jh.close(conn);
+		}
+		return userId;
     }
 }
