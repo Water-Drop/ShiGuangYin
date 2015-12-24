@@ -187,16 +187,17 @@ public class UserDaoimpl implements UserDao{
 		}
 		return userId;
     }
-    public Integer getUserIdByTelephoneAndPassword(String telephone, String password){
+    public Integer getUserIdByTelephoneAndPassword(String telephone, String password, Integer type){
     	Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
     	Integer userId = -1;
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE telephone=? AND password=? AND status!=2");
+			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE telephone=? AND password=? AND type=? AND status!=2");
 			ps.setString(1, telephone);
 			ps.setString(2, password);
+			ps.setInt(3, type);
 			rs = ps.executeQuery();
 			if (rs.first() != false){
 				userId = rs.getInt("id");
@@ -208,16 +209,17 @@ public class UserDaoimpl implements UserDao{
 		}
 		return userId;
     }
-    public Integer getUserIdByEmailAndPassword(String email, String password){
+    public Integer getUserIdByEmailAndPassword(String email, String password, Integer type){
     	Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
     	Integer userId = -1;
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE email=? AND password=? AND status!=2");
+			ps = conn.prepareStatement("SELECT id FROM tb_user WHERE email=? AND password=? AND type=? AND status!=2");
 			ps.setString(1, email);
 			ps.setString(2, password);
+			ps.setInt(3, type);
 			rs = ps.executeQuery();
 			if (rs.first() != false){
 				userId = rs.getInt("id");

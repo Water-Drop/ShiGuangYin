@@ -11,6 +11,6 @@ public interface UserDao {
     public Integer modifyUser(User user);
     public Integer getUserIdByTelephone(String telephone);
     public Integer getUserIdByEmail(String email);
-    public Integer getUserIdByTelephoneAndPassword(String telephone, String password);
-    public Integer getUserIdByEmailAndPassword(String email, String password);
+    public Integer getUserIdByTelephoneAndPassword(String telephone, String password, Integer type);
+    public Integer getUserIdByEmailAndPassword(String email, String password, Integer type);
 }
