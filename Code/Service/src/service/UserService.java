@@ -138,7 +138,7 @@ public class UserService {
 				if ((userId = ud.addUser(user)) > 0){
 					String requestIp = req.getRemoteAddr();
 		    		String userAgent = req.getHeader("user-agent");
-		    		AuthToken at = new AuthToken();
+	    			AuthToken at = new AuthToken();
 		    		at.setUid(userId);
 		    		at.setIp(requestIp);
 		    		at.setAgent(userAgent);
@@ -183,19 +183,23 @@ public class UserService {
 	    	if (userId > 0){
 	    		String requestIp = req.getRemoteAddr();
 	    		String userAgent = req.getHeader("user-agent");
-	    		AuthToken at = new AuthToken();
-	    		at.setUid(userId);
-	    		at.setIp(requestIp);
-	    		at.setAgent(userAgent);
-	    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
-	    		at.setAuthTime(sdf.format(new Date()));
-	    		token = MD5Helper.getMD5(at.getUid().toString() + at.getIp() + at.getAgent() + at.getAuthTime());
-	    		at.setToken(token);
-	    	    if (!(atd.addAuthToken(at) > 0)){
-	    	    	status = 2;// Exception while generate authentication token.
-	    	    } else {
-	    	    	status = 0;
-	    	    }
+	    		if (atd.deleteAuthTokensByIpAgentAndUserId(requestIp,userAgent,userId) >= 0){
+	    			AuthToken at = new AuthToken();
+		    		at.setUid(userId);
+		    		at.setIp(requestIp);
+		    		at.setAgent(userAgent);
+		    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		    		at.setAuthTime(sdf.format(new Date()));
+		    		token = MD5Helper.getMD5(at.getUid().toString() + at.getIp() + at.getAgent() + at.getAuthTime());
+		    		at.setToken(token);
+		    	    if (!(atd.addAuthToken(at) > 0)){
+		    	    	status = 2;// Exception while generate authentication token.
+		    	    } else {
+		    	    	status = 0;
+		    	    }
+	    		} else {
+	    			status = 3;// Exception while delete old authentication token.
+	    		}
 	    	} else {
 	    		status = 1;// No such user with the loginName and password
 	    	}

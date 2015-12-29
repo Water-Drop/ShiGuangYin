@@ -10,4 +10,5 @@ public interface AuthTokenDao {
     public Integer deleteAuthToken(Integer id);
     public Integer modifyAuthToken(AuthToken authToken);
     public String getTokenByIpAgentAndUserId(String ip, String agent, Integer userId);
+    public Integer deleteAuthTokensByIpAgentAndUserId(String ip, String agent, Integer userId);
 }

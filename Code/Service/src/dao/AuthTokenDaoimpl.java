@@ -171,4 +171,27 @@ public class AuthTokenDaoimpl implements AuthTokenDao{
 		}
     	return token;
     }
+    public Integer deleteAuthTokensByIpAgentAndUserId(String ip, String agent, Integer userId){
+    	Connection conn = null;
+		PreparedStatement ps = null;
+		Integer rtn = -1;
+		try {
+			conn = jh.getConnection();
+			ps = conn.prepareStatement("UPDATE tb_authtoken SET status=2 WHERE ip=? AND agent=? AND uid=? AND status!=2");
+			ps.setString(1, ip);
+			ps.setString(2, agent);
+			ps.setInt(3, userId);
+			Integer num = ps.executeUpdate();
+			if (num == 0){
+				rtn = 1;
+			} else {
+				rtn = 0;
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			jh.close(conn);
+		}
+		return rtn;
+    }
 }
