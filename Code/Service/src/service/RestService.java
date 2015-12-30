@@ -1,6 +1,8 @@
 package service;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,25 +16,34 @@ import javax.ws.rs.core.MediaType;
 import net.sf.json.JSONObject;
 import dao.AuthTokenDao;
 import dao.AuthTokenDaoimpl;
+import dao.InvokeRecordDao;
+import dao.InvokeRecordDaoimpl;
 
 @Path("/RestService")
 public class RestService {
 	AuthTokenDao atd = new AuthTokenDaoimpl();
+	InvokeRecordDao ird = new InvokeRecordDaoimpl();
 	@Context HttpServletRequest req; 
 	@Path("/RestAPI")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String RestAPIHandler(String param){
 		String rtn = "";
+		String bizClassName = "";
+		String bizMethodName = "";
+		String mParam = "";
+		String authToken = "";
+		Integer userId = 0;
+		String requestIp = "";
 		Map<String, String> map = new HashMap<String, String>();
 		try {  
 			JSONObject json_param = JSONObject.fromObject(param);
-			String bizClassName = json_param.getString("cname");
-			String bizMethodName = json_param.getString("mname");
-			String mParam = json_param.getString("mparam");
-			String authToken = json_param.getString("authToken");
-			Integer userId = json_param.getInt("userId");
-			String requestIp = req.getRemoteAddr();
+			bizClassName = json_param.getString("cname");
+			bizMethodName = json_param.getString("mname");
+			mParam = json_param.getString("mparam");
+			authToken = json_param.getString("authToken");
+			userId = json_param.getInt("userId");
+			requestIp = req.getRemoteAddr();
     		String userAgent = req.getHeader("user-agent");
     		if (authToken.equals(atd.getTokenByIpAgentAndUserId(requestIp, userAgent, userId))){
     			JSONObject mObject = JSONObject.fromObject(mParam);
@@ -64,6 +75,16 @@ public class RestService {
 	    	JSONObject json = JSONObject.fromObject(map);
 	    	rtn = json.toString();
 	    }
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+			if (rtn.length() > 199){
+				ird.addInvokeRecord(userId, requestIp, bizClassName, bizMethodName, rtn.substring(0, 199), sdf.format(new Date()));
+			} else {
+				ird.addInvokeRecord(userId, requestIp, bizClassName, bizMethodName, rtn, sdf.format(new Date()));
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		return rtn;
 	}  
 }
