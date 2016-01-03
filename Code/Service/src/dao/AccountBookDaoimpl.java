@@ -20,7 +20,7 @@ public class AccountBookDaoimpl implements AccountBookDao{
 		List<AccountBook> accountBooks = new ArrayList<AccountBook>();
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT id,uid,name,description,createTime,status FROM tb_accountbook WHERE status!=2");
+			ps = conn.prepareStatement("SELECT id,uid,name,description,createTime,planCost,endTime,status FROM tb_accountbook WHERE status!=2");
 			rs = ps.executeQuery();
 			while (rs.next()){
 				AccountBook accountBook = new AccountBook();
@@ -29,6 +29,8 @@ public class AccountBookDaoimpl implements AccountBookDao{
 				accountBook.setName(rs.getString("name"));
 				accountBook.setDescription(rs.getString("description"));
 				accountBook.setCreateTime(rs.getString("createTime"));
+				accountBook.setPlanCost(rs.getInt("planCost"));
+				accountBook.setEndTime(rs.getString("endTime"));
 				accountBook.setStatus(rs.getInt("status"));
 				accountBooks.add(accountBook);
 			}
@@ -46,7 +48,7 @@ public class AccountBookDaoimpl implements AccountBookDao{
     	AccountBook accountBook = new AccountBook();
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT uid,name,description,createTime,status FROM tb_accountbook WHERE id=? AND status!=2");
+			ps = conn.prepareStatement("SELECT uid,name,description,createTime,planCost,endTime,status FROM tb_accountbook WHERE id=? AND status!=2");
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
 			if (rs.first() != false){
@@ -55,6 +57,8 @@ public class AccountBookDaoimpl implements AccountBookDao{
 				accountBook.setName(rs.getString("name"));
 				accountBook.setDescription(rs.getString("description"));
 				accountBook.setCreateTime(rs.getString("createTime"));
+				accountBook.setPlanCost(rs.getInt("planCost"));
+				accountBook.setEndTime(rs.getString("endTime"));
 				accountBook.setStatus(rs.getInt("status"));
 			}  else {
 				accountBook.setStatus(2);
@@ -75,11 +79,13 @@ public class AccountBookDaoimpl implements AccountBookDao{
 		try {
 			conn = jh.getConnection();
 			conn.setAutoCommit(false);
-			ips = conn.prepareStatement("INSERT INTO tb_accountbook (uid,name,description,createTime,status) VALUES (?,?,?,?,0)");
+			ips = conn.prepareStatement("INSERT INTO tb_accountbook (uid,name,description,createTime,planCost,endTime,status) VALUES (?,?,?,?,?,?,0)");
 			ips.setInt(1,accountBook.getUid());
 			ips.setString(2,accountBook.getName());
 			ips.setString(3,accountBook.getDescription());
 			ips.setString(4,accountBook.getCreateTime());
+			ips.setInt(5, accountBook.getPlanCost());
+			ips.setString(6, accountBook.getEndTime());
 			sps = conn.prepareStatement("SELECT LAST_INSERT_ID()");
 			ips.execute();
 			rs = sps.executeQuery();
@@ -131,14 +137,14 @@ public class AccountBookDaoimpl implements AccountBookDao{
 		Integer rtn = -1;
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("UPDATE tb_accountbook SET uid=?,name=?,description=?,createTime=? WHERE id=?");
-			
+			ps = conn.prepareStatement("UPDATE tb_accountbook SET uid=?,name=?,description=?,createTime=?,planCost=?,endTime=? WHERE id=?");
 			ps.setInt(1,accountBook.getUid());
 			ps.setString(2,accountBook.getName());
 			ps.setString(3,accountBook.getDescription());
 			ps.setString(4,accountBook.getCreateTime());
-			
-			ps.setInt(5,accountBook.getId());
+			ps.setInt(5, accountBook.getPlanCost());
+			ps.setString(6, accountBook.getEndTime());
+			ps.setInt(7,accountBook.getId());
 			Integer num = ps.executeUpdate();
 			if (num == 0){
 				rtn = 1;
@@ -159,7 +165,7 @@ public class AccountBookDaoimpl implements AccountBookDao{
 		List<AccountBook> accountBooks = new ArrayList<AccountBook>();
 		try {
 			conn = jh.getConnection();
-			ps = conn.prepareStatement("SELECT id,uid,name,description,createTime FROM tb_accountbook WHERE uid=? AND status!=2");
+			ps = conn.prepareStatement("SELECT id,uid,name,description,createTime,planCost,endTime,status FROM tb_accountbook WHERE uid=? AND status!=2");
 			ps.setInt(1, uid);
 			rs = ps.executeQuery();
 			while (rs.next()){
@@ -169,6 +175,9 @@ public class AccountBookDaoimpl implements AccountBookDao{
 				accountBook.setName(rs.getString("name"));
 				accountBook.setDescription(rs.getString("description"));
 				accountBook.setCreateTime(rs.getString("createTime"));
+				accountBook.setPlanCost(rs.getInt("planCost"));
+				accountBook.setEndTime(rs.getString("endTime"));
+				accountBook.setStatus(rs.getInt("status"));
 				accountBooks.add(accountBook);
 			}
 		} catch (Exception e) {

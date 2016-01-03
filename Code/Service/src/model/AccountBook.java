@@ -5,18 +5,23 @@ public class AccountBook {
     private String name;
     private String description;
     private String createTime;
+    private Integer planCost;
+    private String endTime;
 	private Integer status; 
 	private Integer id; 
 	
     public AccountBook() {    
     }
-    public AccountBook(Integer uid, String name, String description, String createTime) {
-    	this.uid = uid;
-    	this.name = name;
-    	this.description = description;
-    	this.createTime = createTime;
-    }
-
+	public AccountBook(Integer uid, String name, String description,
+			String createTime, Integer planCost, String endTime) {
+		super();
+		this.uid = uid;
+		this.name = name;
+		this.description = description;
+		this.createTime = createTime;
+		this.planCost = planCost;
+		this.endTime = endTime;
+	}
 	public Integer getId() {
     	return id;
     }
@@ -47,7 +52,19 @@ public class AccountBook {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
-    public Integer getStatus() {
+    public Integer getPlanCost() {
+		return planCost;
+	}
+	public void setPlanCost(Integer planCost) {
+		this.planCost = planCost;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	public Integer getStatus() {
     	return status;
     }
     public void setStatus(Integer status) {

@@ -47,6 +47,8 @@ public class AccountBookService{
 		  		map.put("name",accountBook.getName().toString());
 		  		map.put("description",accountBook.getDescription().toString());
 		  		map.put("createTime",accountBook.getCreateTime().toString());
+		  		map.put("planCost", accountBook.getPlanCost().toString());
+		  		map.put("endTime", accountBook.getEndTime().toString());
 		  		map.put("status",accountBook.getStatus().toString());
 		  	} else {
 				status = 1;// no such entity for the id
@@ -69,6 +71,8 @@ public class AccountBookService{
 			accountBook.setDescription(paramjson.getString("description"));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
 			accountBook.setCreateTime(sdf.format(new Date()));
+			accountBook.setPlanCost(paramjson.getInt("planCost"));
+			accountBook.setEndTime(paramjson.getString("endTime"));
 	   		accountBookid = accountBookDao.addAccountBook(accountBook);
 			if (accountBookid > 0){
 				status = 0;
@@ -91,6 +95,8 @@ public class AccountBookService{
 			accountBook.setUid(paramjson.getInt("uid"));
 			accountBook.setName(paramjson.getString("name"));
 			accountBook.setDescription(paramjson.getString("description"));
+			accountBook.setPlanCost(paramjson.getInt("planCost"));
+			accountBook.setEndTime(paramjson.getString("endTime"));
 	   		status = accountBookDao.modifyAccountBook(accountBook);
     	} catch (Exception e){
     		e.printStackTrace();
